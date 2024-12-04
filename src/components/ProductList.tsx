@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import useProductStore from '@/store/productStore';
+import useProductStore from '../store/productStore';
 import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { IProduct } from '@/models/Product';
+import { IProduct } from '../models/Product';
+import { Types } from 'mongoose';
 
 const statusIcons: Record<IProduct['status'], JSX.Element> = {
   in_stock: <CheckCircleIcon className="h-5 w-5 text-green-500" />,
@@ -75,7 +76,7 @@ export default function ProductList() {
           onChange={(e) => setFilters({ category: e.target.value || null })}
         >
           <option value="">すべてのカテゴリー</option>
-          {uniqueCategories.map((category: string) => (
+          {uniqueCategories.map((category) => (
             <option key={category} value={category}>{category}</option>
           ))}
         </select>
@@ -83,9 +84,9 @@ export default function ProductList() {
 
       {/* 商品リスト */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {products.map((product) => (
+        {(products as (IProduct & { _id: Types.ObjectId })[]).map((product) => (
           <div
-            key={product._id}
+            key={product._id.toString()}
             className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
             onClick={() => setSelectedProduct(product)}
           >

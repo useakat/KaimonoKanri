@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { IProduct } from '@/models/Product';
+import { IProduct } from '../models/Product';
 
 interface ProductState {
   products: IProduct[];
@@ -14,8 +14,8 @@ interface ProductState {
   
   // Actions
   fetchProducts: () => Promise<void>;
-  createProduct: (product: Partial<IProduct>) => Promise<void>;
-  updateProduct: (id: string, product: Partial<IProduct>) => Promise<void>;
+  createProduct: (product: Partial<Omit<IProduct, '_id'>>) => Promise<void>;
+  updateProduct: (id: string, product: Partial<Omit<IProduct, '_id'>>) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   setSelectedProduct: (product: IProduct | null) => void;
   setFilters: (filters: Partial<ProductState['filters']>) => void;
@@ -93,7 +93,7 @@ const useProductStore = create<ProductState>((set, get) => ({
       const updatedProduct = await response.json();
       set(state => ({
         products: state.products.map(p => 
-          p._id === id ? updatedProduct : p
+          p._id.toString() === id ? updatedProduct : p
         ),
         loading: false,
       }));
@@ -115,7 +115,7 @@ const useProductStore = create<ProductState>((set, get) => ({
       }
 
       set(state => ({
-        products: state.products.filter(p => p._id !== id),
+        products: state.products.filter(p => p._id.toString() !== id),
         loading: false,
       }));
     } catch (error) {
