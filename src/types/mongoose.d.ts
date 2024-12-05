@@ -2,7 +2,7 @@ declare module 'mongoose' {
   import { ObjectId } from 'mongodb';
 
   interface QueryResult<T> extends Promise<T> {
-    sort(criteria: string | { [key: string]: 1 | -1 }): QueryResult<T>;
+    sort(criteria: string | { [key: string]: 1 | -1 | 'asc' | 'desc' | 'ascending' | 'descending' }): QueryResult<T>;
   }
 
   export interface Document {
@@ -21,20 +21,52 @@ declare module 'mongoose' {
       options?: { new?: boolean; runValidators?: boolean }
     ): QueryResult<T | null>;
     findByIdAndDelete(id: string | ObjectId): QueryResult<T | null>;
-    findOne(filter?: object): QueryResult<T | null>;
-    find(filter?: object): QueryResult<T[]>;
-    updateOne(filter: object, update: object): Promise<any>;
-    deleteOne(filter: object): Promise<any>;
+    findOne(filter?: FilterQuery<T>): QueryResult<T | null>;
+    find(filter?: FilterQuery<T>): QueryResult<T[]>;
+    updateOne(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<UpdateResult>;
+    deleteOne(filter: FilterQuery<T>): Promise<DeleteResult>;
   }
 
-  export interface Schema<T = any> {
-    pre(method: string, fn: Function): void;
-    post(method: string, fn: Function): void;
-    index(fields: Record<string, any>, options?: Record<string, any>): void;
+  interface UpdateResult {
+    acknowledged: boolean;
+    modifiedCount: number;
+    upsertedId: ObjectId | null;
+    upsertedCount: number;
+    matchedCount: number;
+  }
+
+  interface DeleteResult {
+    acknowledged: boolean;
+    deletedCount: number;
+  }
+
+  type FilterQuery<T> = {
+    [P in keyof T]?: T[P] | { $regex: string } | { $in: T[P][] } | { $exists: boolean };
+  };
+
+  type UpdateQuery<T> = {
+    $set?: Partial<T>;
+    $inc?: { [P in keyof T]?: number };
+    $push?: { [P in keyof T]?: T[P] extends Array<infer U> ? U : never };
+    $pull?: { [P in keyof T]?: T[P] extends Array<infer U> ? U : never };
+  };
+
+  interface SchemaTypeOptions<T> {
+    type?: T;
+    required?: boolean | [boolean, string];
+    default?: T | (() => T);
+    unique?: boolean;
+    trim?: boolean;
+    min?: number | [number, string];
+    max?: number | [number, string];
+    enum?: T[];
+    sparse?: boolean;
+    set?: (value: T) => T | null;
+    [key: string]: unknown;
   }
 
   export interface SchemaDefinition {
-    [path: string]: any;
+    [path: string]: SchemaTypeOptions<unknown> | Schema | SchemaType | typeof SchemaType | SchemaDefinition;
   }
 
   export interface SchemaOptions {
@@ -43,14 +75,21 @@ declare module 'mongoose' {
     strict?: boolean;
     toJSON?: { virtuals?: boolean };
     toObject?: { virtuals?: boolean };
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
-  export class Schema<T = any> {
-    constructor(definition: SchemaDefinition, options?: SchemaOptions);
-    pre(method: string, fn: Function): void;
-    post(method: string, fn: Function): void;
-    index(fields: Record<string, any>, options?: Record<string, any>): void;
+  export class SchemaType {
+    constructor(path: string, options?: SchemaTypeOptions<unknown>);
+  }
+
+  type PreMiddlewareFunction = (next: (error?: Error) => void) => void | Promise<void>;
+  type PostMiddlewareFunction = (doc: Document, next: (error?: Error) => void) => void | Promise<void>;
+
+  export class Schema {
+    constructor(definition?: SchemaDefinition, options?: SchemaOptions);
+    pre(method: string, fn: PreMiddlewareFunction): void;
+    post(method: string, fn: PostMiddlewareFunction): void;
+    index(fields: Record<string, number | string>, options?: Record<string, unknown>): void;
   }
 
   export function model<T extends Document>(
@@ -60,19 +99,20 @@ declare module 'mongoose' {
   ): Model<T>;
 
   export const models: {
-    [key: string]: Model<any>;
+    [key: string]: Model<Document>;
   };
 
   export const Types: {
     ObjectId: typeof ObjectId;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 
-  // Default export
-  export default {
-    Schema,
-    model,
-    models,
-    Types
+  const mongoose: {
+    Schema: typeof Schema;
+    model: typeof model;
+    models: typeof models;
+    Types: typeof Types;
   };
+
+  export default mongoose;
 }

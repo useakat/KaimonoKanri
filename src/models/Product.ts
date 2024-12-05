@@ -1,8 +1,8 @@
-import type { Document, Model } from 'mongoose';
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 export interface IProduct {
-  _id?: any;
+  _id?: ObjectId;
   name: string;
   category: string;
   description?: string;
@@ -24,7 +24,7 @@ export interface IProduct {
 
 interface IProductDocument extends Document, Omit<IProduct, '_id' | 'createdAt' | 'updatedAt'> {}
 
-const ProductSchema = new mongoose.Schema({
+const ProductSchema = new Schema({
   name: {
     type: String,
     required: [true, '商品名は必須です'],
@@ -104,6 +104,6 @@ ProductSchema.index({ status: 1 });
 ProductSchema.index({ barcode: 1 });
 
 // Try to get existing model or create new one
-const ProductModel = (mongoose.models.Product || mongoose.model('Product', ProductSchema)) as Model<IProductDocument>;
+const ProductModel = mongoose.models.Product || mongoose.model<IProductDocument>('Product', ProductSchema);
 
 export default ProductModel;
