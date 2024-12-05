@@ -1,15 +1,38 @@
 'use client';
 
 import { PlusIcon } from '@heroicons/react/24/outline';
-import ProductList from '@/components/ProductList';
-import ProductModal from '@/components/ProductModal';
-import useProductStore from '@/store/productStore';
+import dynamic from 'next/dynamic';
+
+const ProductList = dynamic(() => import('../components/ProductList'), {
+  ssr: false
+});
+const ProductModal = dynamic(() => import('../components/ProductModal'), {
+  ssr: false
+});
+
+import useProductStore from '../store/productStore';
 
 export default function Home() {
   const { setSelectedProduct } = useProductStore();
 
   const handleAddNewProduct = () => {
-    setSelectedProduct({} as any); // モーダルを新規作成モードで開く
+    setSelectedProduct({
+      name: '',
+      category: '',
+      description: '',
+      imageUrl: '',
+      barcode: '',
+      purchaseUrl: '',
+      currentStock: 0,
+      minimumStock: 0,
+      orderLotSize: 1,
+      leadTime: 0,
+      status: 'in_stock',
+      supplier: {
+        name: '',
+        contact: ''
+      }
+    } as any);
   };
 
   return (

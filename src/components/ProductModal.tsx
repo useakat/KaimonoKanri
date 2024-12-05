@@ -1,8 +1,8 @@
 import { Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useForm } from 'react-hook-form';
-import useProductStore from '@/store/productStore';
-import { IProduct } from '@/models/Product';
+import useProductStore from '../store/productStore';
+import { IProduct } from '../models/Product';
 
 type ProductFormData = Omit<IProduct, '_id' | 'createdAt' | 'updatedAt'>;
 
@@ -37,8 +37,8 @@ export default function ProductModal() {
 
   const onSubmit = async (data: ProductFormData) => {
     try {
-      if (selectedProduct) {
-        await updateProduct(selectedProduct._id, data);
+      if (selectedProduct && selectedProduct._id) {
+        await updateProduct(selectedProduct._id.toString(), data);
       } else {
         await createProduct(data);
       }
@@ -65,7 +65,7 @@ export default function ProductModal() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">
@@ -115,25 +115,19 @@ export default function ProductModal() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700">商品説明</label>
                     <textarea
-                      {...register('description', { required: '商品説明は必須です' })}
+                      {...register('description')}
                       rows={3}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
-                    {errors.description && (
-                      <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700">画像URL</label>
                     <input
                       type="url"
-                      {...register('imageUrl', { required: '画像URLは必須です' })}
+                      {...register('imageUrl')}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
-                    {errors.imageUrl && (
-                      <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
-                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">

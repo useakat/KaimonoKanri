@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { IProduct } from '../models/Product';
+import { IProduct } from '@/models/Product';
 
 interface ProductState {
   products: IProduct[];

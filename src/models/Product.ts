@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
-export interface IProduct extends Document {
-  _id: Types.ObjectId;
+export interface IProduct {
+  _id?: Types.ObjectId;
   name: string;
   category: string;
-  description: string;
-  imageUrl: string;
+  description?: string;
+  imageUrl?: string;
   barcode?: string;
   purchaseUrl?: string;
   currentStock: number;
@@ -17,11 +17,11 @@ export interface IProduct extends Document {
     name: string;
     contact?: string;
   };
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-interface IProductDocument extends Document, IProduct {}
+interface IProductDocument extends Document, Omit<IProduct, '_id' | 'createdAt' | 'updatedAt'> {}
 
 const ProductSchema = new Schema<IProductDocument>({
   name: {
@@ -35,12 +35,10 @@ const ProductSchema = new Schema<IProductDocument>({
     trim: true
   },
   description: {
-    type: String,
-    required: [true, '商品説明は必須です']
+    type: String
   },
   imageUrl: {
-    type: String,
-    required: [true, '商品画像URLは必須です']
+    type: String
   },
   barcode: {
     type: String,

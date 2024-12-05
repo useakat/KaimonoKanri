@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import useProductStore from '../store/productStore';
+import useProductStore from '@/store/productStore';
 import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { IProduct } from '../models/Product';
+import { IProduct } from '@/models/Product';
 import { Types } from 'mongoose';
 
 const statusIcons: Record<IProduct['status'], JSX.Element> = {
