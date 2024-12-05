@@ -89,11 +89,11 @@ export default function ProductModal() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">商品名</label>
+                    <label className="block text-sm font-medium text-black">商品名</label>
                     <input
                       type="text"
                       {...register('name', { required: '商品名は必須です' })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                     />
                     {errors.name && (
                       <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -101,11 +101,11 @@ export default function ProductModal() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">カテゴリー</label>
+                    <label className="block text-sm font-medium text-black">カテゴリー</label>
                     <input
                       type="text"
                       {...register('category', { required: 'カテゴリーは必須です' })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                     />
                     {errors.category && (
                       <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
@@ -113,33 +113,33 @@ export default function ProductModal() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">商品説明</label>
+                    <label className="block text-sm font-medium text-black">商品説明</label>
                     <textarea
                       {...register('description')}
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">画像URL</label>
+                    <label className="block text-sm font-medium text-black">画像URL</label>
                     <input
                       type="url"
                       {...register('imageUrl')}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">現在の在庫数</label>
+                      <label className="block text-sm font-medium text-black">現在の在庫数</label>
                       <input
                         type="number"
                         {...register('currentStock', { 
                           required: '在庫数は必須です',
                           min: { value: 0, message: '0以上の数値を入力してください' }
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                       />
                       {errors.currentStock && (
                         <p className="mt-1 text-sm text-red-600">{errors.currentStock.message}</p>
@@ -147,14 +147,14 @@ export default function ProductModal() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">最小在庫数</label>
+                      <label className="block text-sm font-medium text-black">最小在庫数</label>
                       <input
                         type="number"
                         {...register('minimumStock', {
                           required: '最小在庫数は必須です',
                           min: { value: 0, message: '0以上の数値を入力してください' }
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                       />
                       {errors.minimumStock && (
                         <p className="mt-1 text-sm text-red-600">{errors.minimumStock.message}</p>
@@ -163,11 +163,11 @@ export default function ProductModal() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">仕入先名</label>
+                    <label className="block text-sm font-medium text-black">仕入先名</label>
                     <input
                       type="text"
                       {...register('supplier.name', { required: '仕入先名は必須です' })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                     />
                     {errors.supplier?.name && (
                       <p className="mt-1 text-sm text-red-600">{errors.supplier.name.message}</p>
@@ -175,11 +175,11 @@ export default function ProductModal() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">購入URL</label>
+                    <label className="block text-sm font-medium text-black">購入URL</label>
                     <input
                       type="url"
                       {...register('purchaseUrl')}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
                     />
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import useProductStore from '@/store/productStore';
+import useProductStore from '../store/productStore';
 import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { IProduct } from '@/models/Product';
+import { IProduct } from '../models/Product';
 import { Types } from 'mongoose';
 
 const statusIcons: Record<IProduct['status'], JSX.Element> = {
@@ -47,7 +47,7 @@ export default function ProductList() {
     );
   }
 
-  const uniqueCategories: string[] = Array.from(new Set(products.map(p => p.category)));
+  const uniqueCategories: string[] = Array.from(new Set(products.map((p: IProduct) => p.category)));
 
   return (
     <div className="space-y-4">
@@ -91,15 +91,21 @@ export default function ProductList() {
             onClick={() => setSelectedProduct(product)}
           >
             <div className="relative aspect-video mb-4">
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="absolute inset-0 w-full h-full object-cover rounded-md"
-              />
+              {product.imageUrl ? (
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="absolute inset-0 w-full h-full object-cover rounded-md"
+                />
+              ) : (
+                <div className="absolute inset-0 w-full h-full bg-gray-100 rounded-md flex items-center justify-center">
+                  <span className="text-gray-400">No image</span>
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-start">
-                <h3 className="text-lg font-semibold">{product.name}</h3>
+                <h3 className="text-lg font-semibold text-black">{product.name}</h3>
                 <span className="flex items-center gap-1">
                   {statusIcons[product.status]}
                   <span className="text-sm text-gray-600">
