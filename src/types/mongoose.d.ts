@@ -107,11 +107,17 @@ declare module 'mongoose' {
     [key: string]: unknown;
   };
 
+  interface ConnectOptions {
+    bufferCommands?: boolean;
+    [key: string]: unknown;
+  }
+
   const mongoose: {
     Schema: typeof Schema;
     model: typeof model;
     models: typeof models;
     Types: typeof Types;
+    connect: (uri: string, options?: ConnectOptions) => Promise<typeof mongoose>;
   };
 
   export default mongoose;
