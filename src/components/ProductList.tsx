@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import useProductStore from '../store/productStore';
 import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { IProduct } from '../models/Product';
-import { Types } from 'mongoose';
 import Image from 'next/image';
 
 const statusIcons: Record<IProduct['status'], JSX.Element> = {
@@ -106,7 +105,7 @@ export default function ProductList() {
 
       {/* 商品リスト */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {(products as (IProduct & { _id: Types.ObjectId })[]).map((product) => (
+        {(products as Required<IProduct>[]).map((product) => (
           <div
             key={product._id.toString()}
             className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"

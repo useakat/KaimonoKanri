@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '../../../../lib/mongodb';
-import Product from '../../../../models/Product';
-import type { Error as MongooseError } from 'mongoose';
+import dbConnect from '@/lib/mongodb';
+import Product from '@/models/Product';
+import { isValidationError } from '@/lib/typeGuards';
 
 interface Params {
   params: {
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, { params }: Params) {
     }
 
     return NextResponse.json(product);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Product GET Error:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
@@ -51,18 +51,12 @@ export async function PUT(req: NextRequest, { params }: Params) {
     }
 
     return NextResponse.json(product);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Product PUT Error:', error);
     
-    if (error instanceof Error && 
-        'name' in error && 
-        error.name === 'ValidationError' && 
-        'errors' in error) {
+    if (isValidationError(error)) {
       return NextResponse.json(
-        { 
-          error: 'Validation Error', 
-          details: (error as MongooseError.ValidationError).errors 
-        },
+        { error: 'Validation Error', details: error.errors },
         { status: 400 }
       );
     }
@@ -91,7 +85,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
       { message: 'Product deleted successfully' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Product DELETE Error:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },

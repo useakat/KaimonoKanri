@@ -1,7 +1,8 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 export interface IProduct {
-  _id?: Types.ObjectId;
+  _id?: mongoose.Types.ObjectId;
   name: string;
   category: string;
   description?: string;
@@ -23,7 +24,7 @@ export interface IProduct {
 
 interface IProductDocument extends Document, Omit<IProduct, '_id' | 'createdAt' | 'updatedAt'> {}
 
-const ProductSchema = new Schema<IProductDocument>({
+const ProductSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, '商品名は必須です'],
@@ -87,7 +88,7 @@ const ProductSchema = new Schema<IProductDocument>({
 });
 
 // 在庫状態を自動的に更新するミドルウェア
-ProductSchema.pre('save', function(this: IProductDocument, next) {
+ProductSchema.pre('save', function(this: IProductDocument, next: () => void) {
   if (this.currentStock <= this.minimumStock) {
     this.status = 'need_purchase';
   } else {
@@ -102,4 +103,12 @@ ProductSchema.index({ category: 1 });
 ProductSchema.index({ status: 1 });
 ProductSchema.index({ barcode: 1 });
 
-export default mongoose.models.Product || mongoose.model<IProductDocument>('Product', ProductSchema);
+// Try to get existing model or create new one
+let ProductModel: Model<IProductDocument>;
+try {
+  ProductModel = mongoose.model<IProductDocument>('Product');
+} catch {
+  ProductModel = mongoose.model<IProductDocument>('Product', ProductSchema);
+}
+
+export default ProductModel;

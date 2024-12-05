@@ -93,9 +93,9 @@ const useProductStore = create<ProductState>((set, get) => ({
       const updatedProduct = await response.json();
       set(state => ({
         products: state.products.map(p => 
-          p._id.toString() === id ? updatedProduct : p
+          p._id?.toString() === id ? updatedProduct : p
         ),
-        loading: false,
+        loading: false
       }));
     } catch (error) {
       set({ error: error instanceof Error ? error.message : '予期せぬエラーが発生しました', loading: false });
@@ -115,7 +115,7 @@ const useProductStore = create<ProductState>((set, get) => ({
       }
 
       set(state => ({
-        products: state.products.filter(p => p._id.toString() !== id),
+        products: state.products.filter(p => p._id?.toString() !== id),
         loading: false,
       }));
     } catch (error) {
