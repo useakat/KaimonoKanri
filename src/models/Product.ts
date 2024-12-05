@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
 import type { Document, Model } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface IProduct {
-  _id?: mongoose.Types.ObjectId;
+  _id?: any;
   name: string;
   category: string;
   description?: string;
@@ -104,11 +104,6 @@ ProductSchema.index({ status: 1 });
 ProductSchema.index({ barcode: 1 });
 
 // Try to get existing model or create new one
-let ProductModel: Model<IProductDocument>;
-try {
-  ProductModel = mongoose.model<IProductDocument>('Product');
-} catch {
-  ProductModel = mongoose.model<IProductDocument>('Product', ProductSchema);
-}
+const ProductModel = (mongoose.models.Product || mongoose.model('Product', ProductSchema)) as Model<IProductDocument>;
 
 export default ProductModel;
