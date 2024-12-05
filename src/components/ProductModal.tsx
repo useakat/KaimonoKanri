@@ -162,6 +162,38 @@ export default function ProductModal() {
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-black">発注ロットサイズ</label>
+                      <input
+                        type="number"
+                        {...register('orderLotSize', {
+                          required: '発注ロットサイズは必須です',
+                          min: { value: 1, message: '1以上の数値を入力してください' }
+                        })}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+                      />
+                      {errors.orderLotSize && (
+                        <p className="mt-1 text-sm text-red-600">{errors.orderLotSize.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-black">納期日数</label>
+                      <input
+                        type="number"
+                        {...register('leadTime', {
+                          required: '納期日数は必須です',
+                          min: { value: 0, message: '0以上の数値を入力してください' }
+                        })}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+                      />
+                      {errors.leadTime && (
+                        <p className="mt-1 text-sm text-red-600">{errors.leadTime.message}</p>
+                      )}
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-black">仕入先名</label>
                     <input
@@ -172,6 +204,24 @@ export default function ProductModal() {
                     {errors.supplier?.name && (
                       <p className="mt-1 text-sm text-red-600">{errors.supplier.name.message}</p>
                     )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black">仕入先連絡先</label>
+                    <input
+                      type="text"
+                      {...register('supplier.contact')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black">バーコード</label>
+                    <input
+                      type="text"
+                      {...register('barcode')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+                    />
                   </div>
 
                   <div>

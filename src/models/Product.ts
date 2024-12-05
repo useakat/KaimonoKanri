@@ -6,7 +6,7 @@ export interface IProduct {
   category: string;
   description?: string;
   imageUrl?: string;
-  barcode?: string;
+  barcode?: string | null;
   purchaseUrl?: string;
   currentStock: number;
   minimumStock: number;
@@ -43,7 +43,8 @@ const ProductSchema = new Schema<IProductDocument>({
   barcode: {
     type: String,
     unique: true,
-    sparse: true
+    sparse: true,
+    set: (v: string) => v === '' ? null : v
   },
   purchaseUrl: String,
   currentStock: {
