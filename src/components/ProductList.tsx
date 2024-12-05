@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useProductStore from '../store/productStore';
-import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { IProduct } from '../models/Product';
 import { Types } from 'mongoose';
 
@@ -27,9 +27,15 @@ export default function ProductList() {
     setSelectedProduct 
   } = useProductStore();
 
+  const [searchInput, setSearchInput] = useState(filters.search || '');
+
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+  }, [fetchProducts, filters]); // Add filters as a dependency
+
+  const handleSearch = () => {
+    setFilters({ ...filters, search: searchInput });
+  };
 
   if (loading) {
     return (
@@ -53,17 +59,26 @@ export default function ProductList() {
     <div className="space-y-4">
       {/* フィルターセクション */}
       <div className="flex flex-wrap gap-4 p-4 bg-white rounded-lg shadow">
-        <input
-          type="text"
-          placeholder="商品を検索..."
-          className="flex-1 min-w-[200px] px-4 py-2 border rounded-md text-black"
-          value={filters.search || ''}
-          onChange={(e) => setFilters({ search: e.target.value })}
-        />
+        <div className="flex flex-1 min-w-[200px] gap-2">
+          <input
+            type="text"
+            placeholder="商品を検索..."
+            className="flex-1 px-4 py-2 border rounded-md text-black"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <button
+            onClick={handleSearch}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-2"
+          >
+            <MagnifyingGlassIcon className="h-5 w-5" />
+            検索
+          </button>
+        </div>
         <select
           className="px-4 py-2 border rounded-md bg-white text-black"
           value={filters.status || ''}
-          onChange={(e) => setFilters({ status: e.target.value || null })}
+          onChange={(e) => setFilters({ ...filters, status: e.target.value || null })}
         >
           <option value="">すべてのステータス</option>
           <option value="in_stock">在庫あり</option>
@@ -73,7 +88,7 @@ export default function ProductList() {
         <select
           className="px-4 py-2 border rounded-md bg-white text-black"
           value={filters.category || ''}
-          onChange={(e) => setFilters({ category: e.target.value || null })}
+          onChange={(e) => setFilters({ ...filters, category: e.target.value || null })}
         >
           <option value="">すべてのカテゴリー</option>
           {uniqueCategories.map((category) => (

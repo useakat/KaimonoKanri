@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Product, { IProduct } from '@/models/Product';
+import dbConnect from '../../../lib/mongodb';
+import Product, { IProduct } from '../../../models/Product';
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
     }
 
     if (search) {
-      query.$text = { $search: search };
+      // Use regex for more flexible search
+      query.name = { $regex: search, $options: 'i' };
     }
 
     const products = await Product.find(query).sort({ updatedAt: -1 });
