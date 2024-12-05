@@ -56,7 +56,7 @@ export default function ProductList() {
         <input
           type="text"
           placeholder="商品を検索..."
-          className="flex-1 min-w-[200px] px-4 py-2 border rounded-md"
+          className="flex-1 min-w-[200px] px-4 py-2 border rounded-md text-black"
           value={filters.search || ''}
           onChange={(e) => setFilters({ search: e.target.value })}
         />
