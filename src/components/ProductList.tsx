@@ -61,7 +61,7 @@ export default function ProductList() {
           onChange={(e) => setFilters({ search: e.target.value })}
         />
         <select
-          className="px-4 py-2 border rounded-md"
+          className="px-4 py-2 border rounded-md bg-white text-black"
           value={filters.status || ''}
           onChange={(e) => setFilters({ status: e.target.value || null })}
         >
@@ -71,7 +71,7 @@ export default function ProductList() {
           <option value="ordered">注文済み</option>
         </select>
         <select
-          className="px-4 py-2 border rounded-md"
+          className="px-4 py-2 border rounded-md bg-white text-black"
           value={filters.category || ''}
           onChange={(e) => setFilters({ category: e.target.value || null })}
         >
