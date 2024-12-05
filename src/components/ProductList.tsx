@@ -94,12 +94,12 @@ export default function ProductList() {
               {product.imageUrl ? (
                 <img
                   src={product.imageUrl}
-                  alt={product.name}
-                  className="absolute inset-0 w-full h-full object-cover rounded-md"
+                  alt={`${product.name}の商品画像 - ${product.category}カテゴリー`}
+                  className="absolute inset-0 w-full h-full object-cover rounded-md text-black"
                 />
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-gray-100 rounded-md flex items-center justify-center">
-                  <span className="text-gray-400">No image</span>
+                  <span className="text-black">No image</span>
                 </div>
               )}
             </div>
@@ -115,7 +115,7 @@ export default function ProductList() {
               </div>
               <p className="text-sm text-gray-600">{product.category}</p>
               <div className="flex justify-between items-center">
-                <span className="text-sm">
+                <span className="text-sm text-black">
                   在庫: {product.currentStock} / {product.minimumStock}
                 </span>
                 {product.purchaseUrl && (
