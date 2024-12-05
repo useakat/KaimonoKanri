@@ -3,6 +3,7 @@ import useProductStore from '../store/productStore';
 import { ExclamationCircleIcon, ShoppingCartIcon, CheckCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { IProduct } from '../models/Product';
 import { Types } from 'mongoose';
+import Image from 'next/image';
 
 const statusIcons: Record<IProduct['status'], JSX.Element> = {
   in_stock: <CheckCircleIcon className="h-5 w-5 text-green-500" />,
@@ -31,7 +32,7 @@ export default function ProductList() {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts, filters]); // Add filters as a dependency
+  }, [fetchProducts, filters]);
 
   const handleSearch = () => {
     setFilters({ ...filters, search: searchInput });
@@ -42,7 +43,6 @@ export default function ProductList() {
       handleSearch();
     }
   };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
@@ -114,10 +114,13 @@ export default function ProductList() {
           >
             <div className="relative aspect-video mb-4">
               {product.imageUrl ? (
-                <img
+                <Image
                   src={product.imageUrl}
                   alt={`${product.name}の商品画像 - ${product.category}カテゴリー`}
-                  className="absolute inset-0 w-full h-full object-cover rounded-md text-black"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover rounded-md"
+                  priority={false}
                 />
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-gray-100 rounded-md flex items-center justify-center">

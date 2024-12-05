@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '../../../lib/mongodb';
-import Product, { IProduct } from '../../../models/Product';
+import Product from '../../../models/Product';
+import type { FilterQuery } from 'mongoose';
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status');
     const search = searchParams.get('search');
 
-    let query: any = {};
+    const query: FilterQuery<typeof Product> = {};
 
     if (category) {
       query.category = category;
@@ -46,12 +47,12 @@ export async function POST(req: NextRequest) {
     const product = await Product.create(body);
 
     return NextResponse.json(product, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Products POST Error:', error);
     
-    if (error.name === 'ValidationError') {
+    if (error instanceof Error && 'name' in error && error.name === 'ValidationError') {
       return NextResponse.json(
-        { error: 'Validation Error', details: error.errors },
+        { error: 'Validation Error', details: (error as any).errors },
         { status: 400 }
       );
     }

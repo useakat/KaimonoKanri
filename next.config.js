@@ -7,6 +7,16 @@ const nextConfig = {
     };
     return config;
   },
+  images: {
+    domains: ['example.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        pathname: '/images/**',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

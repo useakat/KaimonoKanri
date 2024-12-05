@@ -2,6 +2,7 @@
 
 import { PlusIcon } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
+import { IProduct } from '../models/Product';
 
 const ProductList = dynamic(() => import('../components/ProductList'), {
   ssr: false
@@ -16,7 +17,7 @@ export default function Home() {
   const { setSelectedProduct } = useProductStore();
 
   const handleAddNewProduct = () => {
-    setSelectedProduct({
+    const newProduct: Omit<IProduct, '_id' | 'createdAt' | 'updatedAt'> = {
       name: '',
       category: '',
       description: '',
@@ -32,7 +33,9 @@ export default function Home() {
         name: '',
         contact: ''
       }
-    } as any);
+    };
+    
+    setSelectedProduct(newProduct);
   };
 
   return (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
+import dbConnect from '../../../../lib/mongodb';
+import Product from '../../../../models/Product';
+import type { Error as MongooseError } from 'mongoose';
 
 interface Params {
   params: {
@@ -50,12 +51,18 @@ export async function PUT(req: NextRequest, { params }: Params) {
     }
 
     return NextResponse.json(product);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Product PUT Error:', error);
     
-    if (error.name === 'ValidationError') {
+    if (error instanceof Error && 
+        'name' in error && 
+        error.name === 'ValidationError' && 
+        'errors' in error) {
       return NextResponse.json(
-        { error: 'Validation Error', details: error.errors },
+        { 
+          error: 'Validation Error', 
+          details: (error as MongooseError.ValidationError).errors 
+        },
         { status: 400 }
       );
     }
