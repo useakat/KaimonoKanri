@@ -12,6 +12,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Skip authentication for internal API calls (proxy endpoints)
+  if (request.nextUrl.pathname.startsWith('/api/proxy')) {
+    return NextResponse.next()
+  }
+
+  // Get the origin of the request
+  const origin = request.headers.get('origin') || ''
+  const host = request.headers.get('host') || ''
+
+  // Allow requests from the same origin
+  if (origin === `https://${host}`) {
+    return NextResponse.next()
+  }
+
   const apiKey = request.headers.get('x-api-key')
   const validApiKey = process.env.API_KEY
 
