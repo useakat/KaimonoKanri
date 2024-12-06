@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { IProduct } from '@/models/Product';
+import { IProduct } from '../models/Product';
 
 interface ProductState {
   products: IProduct[];
@@ -20,6 +20,20 @@ interface ProductState {
   setSelectedProduct: (product: IProduct | null) => void;
   setFilters: (filters: Partial<ProductState['filters']>) => void;
 }
+
+// Utility function to get headers based on environment
+const getHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  // Only add API key in production
+  if (process.env.NODE_ENV === 'production') {
+    headers['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY || '';
+  }
+
+  return headers;
+};
 
 const useProductStore = create<ProductState>((set, get) => ({
   products: [],
@@ -42,7 +56,9 @@ const useProductStore = create<ProductState>((set, get) => ({
       if (filters.status) searchParams.append('status', filters.status);
       if (filters.search) searchParams.append('search', filters.search);
 
-      const response = await fetch(`/api/products?${searchParams.toString()}`);
+      const response = await fetch(`/api/products?${searchParams.toString()}`, {
+        headers: getHeaders(),
+      });
       if (!response.ok) throw new Error('商品の取得に失敗しました');
       
       const data = await response.json();
@@ -57,7 +73,7 @@ const useProductStore = create<ProductState>((set, get) => ({
     try {
       const response = await fetch('/api/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify(product),
       });
 
@@ -81,7 +97,7 @@ const useProductStore = create<ProductState>((set, get) => ({
     try {
       const response = await fetch(`/api/products/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify(product),
       });
 
@@ -107,6 +123,7 @@ const useProductStore = create<ProductState>((set, get) => ({
     try {
       const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
+        headers: getHeaders(),
       });
 
       if (!response.ok) {
