@@ -21,20 +21,6 @@ interface ProductState {
   setFilters: (filters: Partial<ProductState['filters']>) => void;
 }
 
-// Utility function to get headers based on environment
-const getHeaders = () => {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  // Only add API key in production
-  if (process.env.NODE_ENV === 'production') {
-    headers['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY || '';
-  }
-
-  return headers;
-};
-
 const useProductStore = create<ProductState>((set, get) => ({
   products: [],
   loading: false,
@@ -56,8 +42,8 @@ const useProductStore = create<ProductState>((set, get) => ({
       if (filters.status) searchParams.append('status', filters.status);
       if (filters.search) searchParams.append('search', filters.search);
 
-      const response = await fetch(`/api/products?${searchParams.toString()}`, {
-        headers: getHeaders(),
+      const response = await fetch(`/api/proxy/products?${searchParams.toString()}`, {
+        headers: { 'Content-Type': 'application/json' },
       });
       if (!response.ok) throw new Error('商品の取得に失敗しました');
       
@@ -71,9 +57,9 @@ const useProductStore = create<ProductState>((set, get) => ({
   createProduct: async (product) => {
     set({ loading: true, error: null });
     try {
-      const response = await fetch('/api/products', {
+      const response = await fetch('/api/proxy/products', {
         method: 'POST',
-        headers: getHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product),
       });
 
@@ -95,9 +81,9 @@ const useProductStore = create<ProductState>((set, get) => ({
   updateProduct: async (id, product) => {
     set({ loading: true, error: null });
     try {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`/api/proxy/products?id=${id}`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product),
       });
 
@@ -121,9 +107,9 @@ const useProductStore = create<ProductState>((set, get) => ({
   deleteProduct: async (id) => {
     set({ loading: true, error: null });
     try {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`/api/proxy/products?id=${id}`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!response.ok) {
