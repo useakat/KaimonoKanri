@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kaimono-kanri';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error(
     'Please define the MONGODB_URI environment variable inside .env.local'
   );
 }
+
+// TypeScriptに文字列であることを保証
+const MONGODB_CONNECTION_STRING: string = MONGODB_URI;
 
 interface GlobalWithMongoose {
   mongoose: {
@@ -38,7 +41,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance: typeof mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_CONNECTION_STRING, opts).then((mongooseInstance: typeof mongoose) => {
       return mongooseInstance;
     });
   }
